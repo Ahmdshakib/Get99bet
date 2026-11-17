@@ -1,1 +1,6 @@
-
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#22e3a4"/><stop offset="1" stop-color="#3aa0ff"/></linearGradient></defs>
+  <path d="M16 1.500 29.500 9.300v13.400L16 30.500 2.500 22.700V9.300L16 1.500z" fill="url(#g)"/>
+  <path d="M16 5 26 10.800v10.400L16 27 6 21.200V10.800L16 5z" fill="#0a0e17"/>
+  <text x="16" y="21" text-anchor="middle" font-family="Arial, sans-serif" font-weight="800" font-size="12" fill="#22e3a4">99</text>
+</svg>
