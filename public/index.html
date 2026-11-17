@@ -1,1 +1,289 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#0a0e17">
+  <title>Get99Bet Crash</title>
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="stylesheet" href="/css/app.css">
+  <script type="module" src="/js/main.js"></script>
+</head>
+<body>
+  <a class="skip" href="#main" data-i18n="nav.game">Game</a>
 
+  <header class="topbar">
+    <a class="brand" href="#/game" aria-label="Get99Bet Crash">
+      <img src="/assets/logo.svg" alt="Get99Bet" width="148" height="34">
+    </a>
+
+    <nav class="nav" id="nav" aria-label="Main">
+      <a href="#/game" data-view="game"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2c3 2 5 6 5 10l2 3v3l-3-1-2 3h-4l-2-3-3 1v-3l2-3c0-4 2-8 5-10z"/></svg><span data-i18n="nav.game">Game</span></a>
+      <a href="#/dashboard" data-view="dashboard"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 13h6V4H4v9zm0 7h6v-5H4v5zm9 0h7V11h-7v9zm0-16v5h7V4h-7z"/></svg><span data-i18n="nav.dashboard">Dashboard</span></a>
+      <a href="#/history" data-view="history"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 3a9 9 0 1 0 9 9h-2a7 7 0 1 1-2-4.9L14 10h8V2l-3.1 3.1A9 9 0 0 0 13 3zm-1 5v5l4 2 .8-1.5-3.3-1.7V8H12z"/></svg><span data-i18n="nav.history">History</span></a>
+      <a href="#/fair" data-view="fair"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 4 5v6c0 5 3.4 9.7 8 11 4.6-1.3 8-6 8-11V5l-8-3zm-1 14-4-4 1.4-1.4L11 13.2l4.6-4.6L17 10l-6 6z"/></svg><span data-i18n="nav.fair">Fair</span></a>
+      <a href="#/safe" data-view="safe"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-4.4-9.3-9C1.2 8.6 3 5 6.5 5c2 0 3.4 1 5.5 3 2.1-2 3.5-3 5.5-3C21 5 22.800 8.600 21.300 12 19 16.600 12 21 12 21z"/></svg><span data-i18n="nav.safe">Safer play</span></a>
+    </nav>
+
+    <div class="top-actions">
+      <button class="icon-btn" id="sound-btn" type="button" aria-pressed="false" data-i18n-title="game.soundOn">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path id="sound-on" d="M3 9v6h4l5 4V5L7 9H3zm13.500 3A4.500 4.500 0 0 0 14 8v8a4.500 4.500 0 0 0 2.500-4z"/></svg>
+      </button>
+      <button class="lang-btn" id="lang-btn" type="button" aria-label="Language">বাংলা</button>
+      <div class="balance" id="balance-chip" hidden>
+        <span class="balance-label" data-i18n="wallet.label">Test balance</span>
+        <span class="balance-value"><span id="balance">0.00</span> <span class="unit" id="balance-unit">TC</span></span>
+      </div>
+      <button class="btn small" id="login-btn" type="button" data-i18n="auth.login">Log in</button>
+      <button class="btn small ghost" id="logout-btn" type="button" data-i18n="auth.logout" hidden>Log out</button>
+    </div>
+  </header>
+
+  <div class="test-banner" role="note">
+    <span class="pill">TEST MODE</span>
+    <span data-i18n="banner.test">TEST CREDITS ONLY — no real money is used.</span>
+  </div>
+
+  <main id="main" class="main">
+
+    <!-- ================================================= GAME -->
+    <section id="view-game" class="view">
+      <div class="game-grid">
+        <div class="stage-col">
+          <div class="recent" id="recent" aria-label="Recent rounds"></div>
+
+          <div class="stage" id="stage-wrap">
+            <canvas id="stage" role="img" data-i18n-aria="game.stageLabel"></canvas>
+            <div class="stage-overlay" aria-hidden="true">
+              <div class="round-tag"><span data-i18n="game.round">Round</span> <b id="round-no">–</b></div>
+              <div class="mult" id="mult">1.00×</div>
+              <div class="stage-status" id="stage-status"></div>
+            </div>
+            <div class="conn" id="conn" data-i18n="game.connecting">Connecting…</div>
+            <div class="sr-only" id="sr-status" role="status" aria-live="polite"></div>
+          </div>
+
+          <form class="bet-panel" id="bet-form" autocomplete="off">
+            <div class="field">
+              <label for="bet-amount" data-i18n="game.betAmount">Bet amount</label>
+              <div class="amount-row">
+                <button type="button" class="step" id="amt-minus" aria-label="−">−</button>
+                <input id="bet-amount" inputmode="decimal" value="10.00" maxlength="12">
+                <button type="button" class="step" id="amt-plus" aria-label="+">+</button>
+              </div>
+              <div class="quick" id="quick">
+                <button type="button" data-q="min" data-i18n="game.min">Min</button>
+                <button type="button" data-q="half" data-i18n="game.half">½</button>
+                <button type="button" data-q="double" data-i18n="game.double">2×</button>
+                <button type="button" data-q="max" data-i18n="game.max">Max</button>
+              </div>
+            </div>
+
+            <div class="field auto">
+              <label class="switch">
+                <input type="checkbox" id="auto-on">
+                <span class="slider" aria-hidden="true"></span>
+                <span data-i18n="game.autoCashout">Auto cash-out</span>
+              </label>
+              <div class="auto-input">
+                <span data-i18n="game.autoAt">at</span>
+                <input id="auto-x" inputmode="decimal" value="2.00" maxlength="9" disabled>
+                <span>×</span>
+              </div>
+            </div>
+
+            <button class="action" id="action-btn" type="submit"></button>
+            <p class="hint" data-i18n="game.spaceHint">Tip: press Space to bet / cash out</p>
+            <p class="form-note" id="excluded-note" hidden></p>
+          </form>
+        </div>
+
+        <aside class="side-col">
+          <div class="tabs" role="tablist">
+            <button role="tab" id="tab-live" aria-selected="true" data-tab="live" data-i18n="game.liveBets">Live bets</button>
+            <button role="tab" id="tab-mine" aria-selected="false" data-tab="mine" data-i18n="game.myBets">My bets</button>
+          </div>
+          <div class="panel-meta" id="live-meta"></div>
+          <div class="list-head"><span data-i18n="game.col.player">Player</span><span data-i18n="game.col.bet">Bet</span><span data-i18n="game.col.mult">Mult.</span><span data-i18n="game.col.win">Win</span></div>
+          <ul class="bets" id="bets-list"></ul>
+          <div class="table-wrap hidden" id="mine-wrap">
+            <table class="table compact" id="mine-table">
+              <thead><tr><th data-i18n="hist.round">Round</th><th data-i18n="hist.bet">Bet</th><th data-i18n="hist.cashout">Cash-out</th><th data-i18n="hist.profit">Profit</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ================================================= DASHBOARD -->
+    <section id="view-dashboard" class="view" hidden>
+      <h1 data-i18n="dash.title">Your dashboard</h1>
+      <p class="muted" id="dash-login" data-i18n="dash.loginPrompt" hidden>Log in to see your dashboard.</p>
+      <div id="dash-body">
+        <div class="cards">
+          <div class="card"><span class="k" data-i18n="dash.balance">Test balance</span><b id="d-balance">–</b></div>
+          <div class="card"><span class="k" data-i18n="dash.net">Net result</span><b id="d-net">–</b></div>
+          <div class="card"><span class="k" data-i18n="dash.bets">Bets</span><b id="d-bets">–</b></div>
+          <div class="card"><span class="k" data-i18n="dash.winRate">Win rate</span><b id="d-win">–</b></div>
+          <div class="card"><span class="k" data-i18n="dash.wagered">Total wagered</span><b id="d-wagered">–</b></div>
+          <div class="card"><span class="k" data-i18n="dash.best">Best multiplier</span><b id="d-best">–</b></div>
+        </div>
+
+        <div class="panel">
+          <h2 data-i18n="dash.pl">Profit / loss, last 50 bets</h2>
+          <div class="spark"><canvas id="spark" role="img" aria-label="Profit and loss chart"></canvas></div>
+        </div>
+
+        <div class="panel">
+          <div class="row-between">
+            <h2 data-i18n="dash.tx">Wallet transactions</h2>
+            <button class="btn small" id="topup-btn" type="button" data-i18n="dash.topup">Get test credits</button>
+          </div>
+          <p class="muted small" data-i18n="dash.topupNote">Free test credits for trying the game. They are not real money.</p>
+          <div class="table-wrap">
+            <table class="table" id="tx-table">
+              <thead><tr><th data-i18n="tx.type">Type</th><th data-i18n="tx.amount">Amount</th><th data-i18n="tx.balance">Balance</th><th data-i18n="tx.time">Time</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h2 data-i18n="dash.activity">Recent account activity</h2>
+          <ul class="activity" id="activity"></ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================= HISTORY -->
+    <section id="view-history" class="view" hidden>
+      <h1 data-i18n="nav.history">History</h1>
+      <div class="panel">
+        <h2 data-i18n="hist.mine">My bets</h2>
+        <p class="muted" id="hist-login" data-i18n="dash.loginPrompt" hidden>Log in to see your bets.</p>
+        <div class="table-wrap">
+          <table class="table" id="hist-table">
+            <thead><tr>
+              <th data-i18n="hist.round">Round</th><th data-i18n="hist.bet">Bet</th><th data-i18n="hist.auto">Auto</th>
+              <th data-i18n="hist.cashout">Cash-out</th><th data-i18n="hist.payout">Payout</th><th data-i18n="hist.profit">Profit</th>
+              <th data-i18n="hist.crash">Crash</th><th data-i18n="hist.time">Time</th>
+            </tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <button class="btn ghost small" id="hist-more" type="button" data-i18n="hist.loadMore">Load more</button>
+      </div>
+      <div class="panel">
+        <h2 data-i18n="hist.rounds">Recent rounds</h2>
+        <div class="table-wrap">
+          <table class="table" id="rounds-table">
+            <thead><tr><th data-i18n="hist.round">Round</th><th data-i18n="hist.crash">Crash</th><th data-i18n="hist.hash">Round hash</th><th></th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <button class="btn ghost small" id="rounds-more" type="button" data-i18n="hist.loadMore">Load more</button>
+      </div>
+    </section>
+
+    <!-- ================================================= FAIR -->
+    <section id="view-fair" class="view" hidden>
+      <h1 data-i18n="fair.title">Provably fair</h1>
+      <div class="panel">
+        <p data-i18n="fair.intro"></p>
+        <dl class="kv">
+          <dt data-i18n="fair.terminal">Terminal hash</dt><dd class="mono" id="f-terminal">–</dd>
+          <dt data-i18n="fair.clientSeed">Client seed</dt><dd class="mono" id="f-seed">–</dd>
+          <dt data-i18n="fair.edge">House edge</dt><dd id="f-edge">–</dd>
+          <dt data-i18n="fair.remaining">Rounds left</dt><dd id="f-left">–</dd>
+        </dl>
+        <p class="muted small" data-i18n="fair.formula"></p>
+      </div>
+      <div class="panel">
+        <h2 data-i18n="fair.verifyTitle">Verify a round</h2>
+        <form id="verify-form" class="stack" autocomplete="off">
+          <label for="v-hash" data-i18n="fair.hash">Round hash</label>
+          <input id="v-hash" class="mono" spellcheck="false" maxlength="64">
+          <label for="v-prev" data-i18n="fair.prev">Previous hash</label>
+          <input id="v-prev" class="mono" spellcheck="false" maxlength="64">
+          <label for="v-seed" data-i18n="fair.seed">Client seed</label>
+          <input id="v-seed" class="mono" spellcheck="false" maxlength="128">
+          <button class="btn" type="submit" data-i18n="fair.verifyBtn">Verify</button>
+        </form>
+        <div class="verify-out" id="verify-out" role="status"></div>
+      </div>
+    </section>
+
+    <!-- ================================================= SAFER PLAY -->
+    <section id="view-safe" class="view" hidden>
+      <h1 data-i18n="safe.title">Safer play</h1>
+      <p class="muted" data-i18n="safe.intro"></p>
+      <p class="muted" id="safe-login" data-i18n="dash.loginPrompt" hidden>Log in to manage your limits.</p>
+      <div id="safe-body">
+        <form class="panel stack" id="limits-form" autocomplete="off">
+          <p class="muted small" id="loss-line"></p>
+          <label for="l-reminder" data-i18n="safe.reminder">Session reminder (minutes)</label>
+          <input id="l-reminder" inputmode="numeric" maxlength="3">
+          <label for="l-maxbet" data-i18n="safe.maxBet">Maximum bet per round</label>
+          <input id="l-maxbet" inputmode="decimal" maxlength="12" data-i18n-placeholder="safe.noLimit" placeholder="No limit">
+          <label for="l-loss" data-i18n="safe.dailyLoss">Daily loss limit</label>
+          <input id="l-loss" inputmode="decimal" maxlength="12" data-i18n-placeholder="safe.noLimit" placeholder="No limit">
+          <p class="form-note" id="pending-note" hidden></p>
+          <button class="btn" type="submit" data-i18n="safe.save">Save limits</button>
+        </form>
+
+        <form class="panel stack" id="exclude-form">
+          <h2 data-i18n="safe.excl.title">Take a break</h2>
+          <p class="muted" data-i18n="safe.excl.desc"></p>
+          <p class="form-note" id="excl-active" hidden></p>
+          <label for="x-days" data-i18n="safe.excl.title">Take a break</label>
+          <select id="x-days"></select>
+          <label class="check"><input type="checkbox" id="x-confirm"><span data-i18n="safe.excl.confirm">I understand I cannot undo this.</span></label>
+          <button class="btn danger" type="submit" data-i18n="safe.excl.btn">Start break</button>
+        </form>
+        <p class="muted small" data-i18n="safe.help"></p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <span class="pill gold" data-i18n="footer.18">18+ only</span>
+    <span data-i18n="footer.test">Test mode: no real money.</span>
+  </footer>
+
+  <!-- ============================== dialogs -->
+  <dialog id="auth-dialog" aria-labelledby="auth-title">
+    <form id="auth-form" method="dialog" class="stack" autocomplete="on">
+      <div class="dialog-head">
+        <h2 id="auth-title" data-i18n="auth.login">Log in</h2>
+        <button type="button" class="icon-btn" id="auth-close" data-i18n-aria="common.close" aria-label="Close">✕</button>
+      </div>
+      <label for="a-user" data-i18n="auth.username">Username</label>
+      <input id="a-user" name="username" autocomplete="username" maxlength="20" required>
+      <label for="a-pass" data-i18n="auth.password">Password</label>
+      <input id="a-pass" name="password" type="password" autocomplete="current-password" maxlength="128" required>
+      <p class="muted small" id="a-hint" data-i18n="auth.passwordHint" hidden>10 characters or more</p>
+      <label class="check" id="a-age-row" hidden><input type="checkbox" id="a-age"><span data-i18n="auth.age"></span></label>
+      <p class="form-error" id="auth-error" role="alert"></p>
+      <button class="btn" id="auth-submit" type="submit" data-i18n="auth.login">Log in</button>
+      <p class="muted small center"><span id="auth-switch-text" data-i18n="auth.noAccount">New here?</span> <button type="button" class="link" id="auth-switch" data-i18n="auth.register">Sign up</button></p>
+    </form>
+  </dialog>
+
+  <dialog id="reality-dialog" aria-labelledby="reality-title">
+    <div class="stack">
+      <h2 id="reality-title" data-i18n="reality.title">Time check</h2>
+      <p id="reality-body"></p>
+      <div class="btn-row">
+        <button class="btn" id="reality-continue" type="button" data-i18n="reality.continue">Continue</button>
+        <button class="btn ghost" id="reality-break" type="button" data-i18n="reality.break">Take a 24h break</button>
+        <button class="btn ghost" id="reality-logout" type="button" data-i18n="reality.logout">Log out</button>
+      </div>
+    </div>
+  </dialog>
+
+  <div class="toasts" id="toasts" role="status" aria-live="polite"></div>
+  <noscript><p class="center">JavaScript is required to play.</p></noscript>
+</body>
+</html>
