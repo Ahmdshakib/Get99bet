@@ -1,0 +1,37 @@
+# Production-style stack: app + PostgreSQL. Put a TLS reverse proxy (see deploy/nginx.conf) in front.
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: get99bet
+      POSTGRES_USER: get99bet
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U get99bet -d get99bet"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  app:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      DATABASE_URL: postgres://get99bet:${POSTGRES_PASSWORD}@db:5432/get99bet
+      TRUST_PROXY: "true"
+      COOKIE_SECURE: "true"
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:?set ALLOWED_ORIGINS, e.g. https://play.get99bet.example}
+      WALLET_MODE: test            # real-money mode is blocked until licensed wallet API + legal sign-off
+      FAIR_CLIENT_SEED: ${FAIR_CLIENT_SEED:-get99bet-test-client-seed}
+    ports:
+      - "127.0.0.1:3000:3000"      # only the reverse proxy should reach the app
+
+volumes:
+  pgdata:

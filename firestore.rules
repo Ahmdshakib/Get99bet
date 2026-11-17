@@ -1,0 +1,85 @@
+rules_version = '2';
+
+// GET99BET Firestore Security Rules
+// - All money-related writes (balances, deposits, withdrawals, ledger) are performed ONLY by
+//   Cloud Functions using the Admin SDK, which bypasses these rules.
+// - Clients can never write balances, statuses, roles or ledger entries.
+// - Admin = Firebase Auth custom claim { admin: true } (set with scripts/setAdmin.js).
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() { return request.auth != null; }
+    function isAdmin()  { return signedIn() && request.auth.token.admin == true; }
+    function isOwner(uid) { return signedIn() && request.auth.uid == uid; }
+
+    // User profile + balances (read-only for the owner; only safe profile fields editable)
+    match /users/{uid} {
+      allow read: if isOwner(uid) || isAdmin();
+      allow create, delete: if false;
+      allow update: if isOwner(uid)
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['fullName', 'phone'])
+        && request.resource.data.fullName is string
+        && request.resource.data.fullName.size() >= 2
+        && request.resource.data.fullName.size() <= 60
+        && request.resource.data.phone is string
+        && request.resource.data.phone.size() >= 8
+        && request.resource.data.phone.size() <= 20;
+    }
+
+    // Username -> uid index and counters: server only
+    match /usernames/{name}  { allow read, write: if false; }
+    match /counters/{doc}    { allow read, write: if false; }
+    match /depositTxn/{doc}  { allow read, write: if false; }
+
+    // Payment requests: owner/admin can read, nobody can write from the client
+    match /deposits/{id} {
+      allow read: if isAdmin() || (signedIn() && resource.data.uid == request.auth.uid);
+      allow write: if false;
+    }
+    match /withdrawals/{id} {
+      allow read: if isAdmin() || (signedIn() && resource.data.uid == request.auth.uid);
+      allow write: if false;
+    }
+
+    // Immutable financial ledger: append-only via Cloud Functions
+    match /ledger/{id} {
+      allow read: if isAdmin() || (signedIn() && resource.data.uid == request.auth.uid);
+      allow write: if false;
+    }
+
+    // Notifications: owner may only mark as read
+    match /notifications/{id} {
+      allow read: if isAdmin() || (signedIn() && resource.data.uid == request.auth.uid);
+      allow update: if signedIn() && resource.data.uid == request.auth.uid
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['read']);
+      allow create, delete: if false;
+    }
+    match /broadcasts/{id} {
+      allow read: if signedIn();
+      allow write: if false;
+    }
+
+    // Public content, written by admin Cloud Functions only
+    match /promotions/{id} { allow read: if true; allow write: if false; }
+    match /settings/{id}   { allow read: if true; allow write: if false; }
+
+    // Support tickets
+    match /tickets/{id} {
+      allow read: if isAdmin() || (signedIn() && resource.data.uid == request.auth.uid);
+      allow write: if false;
+      match /messages/{mid} {
+        allow read: if isAdmin()
+          || (signedIn() && get(/databases/$(database)/documents/tickets/$(id)).data.uid == request.auth.uid);
+        allow write: if false;
+      }
+    }
+
+    // Admin activity log: admin read, server write
+    match /adminLogs/{id} {
+      allow read: if isAdmin();
+      allow write: if false;
+    }
+
+    match /{document=**} { allow read, write: if false; }
+  }
+}
